@@ -1,0 +1,42 @@
+package com.gyx.enums;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/**
+ * @author: GYX
+ * @program: chatgpt-data
+ * @description:
+ * @create: 2024-01-05 16:44
+ **/
+@Getter
+@AllArgsConstructor
+public enum ChatGLMModel {
+
+    CHATGLM_6B_SSE("chatGLM_6b_SSE"),
+    CHATGLM_LITE("chatglm_lite"),
+    CHATGLM_LITE_32K("chatglm_lite_32k"),
+    CHATGLM_STD("chatglm_std"),
+    CHATGLM_PRO("chatglm_pro"),
+
+    ;
+    private final String code;
+
+    public static ChatGLMModel get(String code){
+        switch (code){
+            case "chatGLM_6b_SSE":
+                return ChatGLMModel.CHATGLM_6B_SSE;
+            case "chatglm_lite":
+                return ChatGLMModel.CHATGLM_LITE;
+            case "chatglm_lite_32k":
+                return ChatGLMModel.CHATGLM_LITE_32K;
+            case "chatglm_std":
+                return ChatGLMModel.CHATGLM_STD;
+            case "chatglm_pro":
+                return ChatGLMModel.CHATGLM_PRO;
+            default:
+                return ChatGLMModel.CHATGLM_6B_SSE;
+        }
+    }
+
+}
