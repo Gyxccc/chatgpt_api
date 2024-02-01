@@ -42,6 +42,11 @@
             <artifactId>chatglm-sdk-java</artifactId>
         </dependency>
         <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.gyx</groupId>
             <artifactId>chatgpt-data-types</artifactId>
             <version>0.0.1-SNAPSHOT</version>

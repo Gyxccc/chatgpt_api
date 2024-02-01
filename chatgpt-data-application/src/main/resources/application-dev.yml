@@ -35,3 +35,13 @@ logging:
   level:
     root: info
   config: classpath:logback-spring.xml
+
+# 微信公众号配置信息
+# originalid：原始ID
+# appid：个人AppID
+# token：开通接口服务自定义设置
+wx:
+  config:
+    originalid: gh_0c887e11d9f0
+    appid: wx4884b64d80e5b2c2
+    token: 05190616
