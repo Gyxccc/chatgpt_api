@@ -8,6 +8,10 @@ app:
     api-version: v1
     # 跨域，开发阶段可以设置为 * 不限制
     cross-origin: '*'
+    # 访问频次限制
+    limit-count: 10
+    # 白名单，不做频次拦截【微信的openai】oxfA9w8-23yvwTmo2ombz0E4zJv4
+    white-list: orjLh6vaSAVcZkjMMgqyZoeZq8Q4
 
 # 线程池配置
 thread:
@@ -30,11 +34,7 @@ chatglm:
       api-host: https://open.bigmodel.cn/
       # 官网申请 https://platform.openai.com/account/api-keys
       api-Secretkey: 0dc1c9beb3241e6326358bc8078f6e97.Kc7WotuYSEaoUqV8
-# 日志
-logging:
-  level:
-    root: info
-  config: classpath:logback-spring.xml
+
 
 # 微信公众号配置信息
 # originalid：原始ID
@@ -45,3 +45,31 @@ wx:
     originalid: gh_0c887e11d9f0
     appid: wx4884b64d80e5b2c2
     token: 05190616
+
+# 数据库配置；SpringBoot 默认连接池为 HikariDataSource
+spring:
+  datasource:
+    username: root
+    password: Gongyuxuan36
+    url: jdbc:mysql://117.72.47.148:3306/openai?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  hikari:
+    pool-name: Retail_HikariCP
+    minimum-idle: 15 #最小空闲连接数量
+    idle-timeout: 180000 #空闲连接存活最大时间，默认600000（10分钟）
+    maximum-pool-size: 25 #连接池最大连接数，默认是10
+    auto-commit: true  #此属性控制从池返回的连接的默认自动提交行为,默认值：true
+    max-lifetime: 1800000 #此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
+    connection-timeout: 30000 #数据库连接超时时间,默认30秒，即30000
+    connection-test-query: SELECT 1
+  type: com.zaxxer.hikari.HikariDataSource
+
+mybatis:
+  mapper-locations: classpath:/mybatis/mapper/*.xml
+  config-location: classpath:/mybatis/config/mybatis-config.xml
+
+# 日志
+logging:
+  level:
+    root: info
+  config: classpath:logback-spring.xml

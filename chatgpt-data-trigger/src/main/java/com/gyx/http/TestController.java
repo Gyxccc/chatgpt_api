@@ -7,7 +7,6 @@ import cn.bugstack.chatglm.session.Configuration;
 import cn.bugstack.chatglm.session.OpenAiSession;
 import cn.bugstack.chatglm.session.OpenAiSessionFactory;
 import cn.bugstack.chatglm.session.defaults.DefaultOpenAiSessionFactory;
-import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

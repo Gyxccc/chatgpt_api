@@ -1,0 +1,1 @@
+docker build -f ./Dockerfile -t 939618840/chatgpt-data-app:1.1 .

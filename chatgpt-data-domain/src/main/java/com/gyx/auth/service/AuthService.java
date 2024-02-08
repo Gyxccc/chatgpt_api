@@ -4,10 +4,12 @@ package com.gyx.auth.service;
 import com.google.common.cache.Cache;
 import com.gyx.auth.model.entity.AuthStateEntity;
 import com.gyx.auth.model.valobj.AuthTypeVO;
+import io.jsonwebtoken.Claims;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+
 
 
 
@@ -51,6 +53,12 @@ public class AuthService extends AbstractAuthService {
     @Override
     public boolean checkToken(String token) {
         return isVerify(token);
+    }
+
+    @Override
+    public String openid(String token) {
+        Claims claims = decode(token);
+        return claims.get("openId").toString();
     }
 
 }
