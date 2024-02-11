@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gyx.enums.ChatGLMModel;
 import com.gyx.exception.ChatGPTException;
 import com.gyx.openai.model.aggregates.ChatProcessAggregate;
+import com.gyx.openai.model.entity.MessageEntity;
 import com.gyx.openai.model.entity.RuleLogicEntity;
 import com.gyx.openai.model.entity.UserAccountEntity;
 import com.gyx.openai.model.valobj.LogicCheckTypeVO;
@@ -22,8 +23,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -49,7 +52,7 @@ public class ChatService extends AbstractChatService {
         Map<String, ILogicFilter<UserAccountEntity>> logicFilterMap = logicFactory.openLogicFilter();
         RuleLogicEntity<ChatProcessAggregate> entity = null;
         for (String code : logics) {
-            if (null == code) continue;
+            if (DefaultLogicFactory.LogicModel.NULL.getCode().equals(code)) continue;
             entity = logicFilterMap.get(code).filter(chatProcess, data);
             if (!LogicCheckTypeVO.SUCCESS.equals(entity.getType())) return entity;
         }
@@ -60,12 +63,48 @@ public class ChatService extends AbstractChatService {
     @Override
     protected void doMessageResponse(ChatProcessAggregate chatProcess, ResponseBodyEmitter emitter) throws JsonProcessingException {
         // 1. 请求消息
-        List<ChatCompletionRequest.Prompt> prompts = chatProcess.getMessages().stream()
-                .map(entity -> ChatCompletionRequest.Prompt.builder()
+//        List<ChatCompletionRequest.Prompt> prompts = chatProcess.getMessages().stream()
+//                .map(entity -> ChatCompletionRequest.Prompt.builder()
+//                        .role(Role.user.getCode())
+//                        .content(entity.getContent())
+//                        .build())
+//                .collect(Collectors.toList());
+        // 1. 请求消息
+        List<ChatCompletionRequest.Prompt> prompts = new ArrayList<>();
+
+        List<MessageEntity> messages = chatProcess.getMessages();
+        MessageEntity messageEntity = messages.remove(messages.size() - 1);
+
+        for (MessageEntity message : messages) {
+            String role = message.getRole();
+            if (Objects.equals(role, Role.system.getCode())) {
+                prompts.add(ChatCompletionRequest.Prompt.builder()
+                        .role(Role.system.getCode())
+                        .content(message.getContent())
+                        .build());
+
+                prompts.add(ChatCompletionRequest.Prompt.builder()
                         .role(Role.user.getCode())
-                        .content(entity.getContent())
-                        .build())
-                .collect(Collectors.toList());
+                        .content("Okay")
+                        .build());
+            } else {
+                prompts.add(ChatCompletionRequest.Prompt.builder()
+                        .role(Role.user.getCode())
+                        .content(message.getContent())
+                        .build());
+
+                prompts.add(ChatCompletionRequest.Prompt.builder()
+                        .role(Role.user.getCode())
+                        .content("Okay")
+                        .build());
+            }
+        }
+
+        prompts.add(ChatCompletionRequest.Prompt.builder()
+                .role(messageEntity.getRole())
+                .content(messageEntity.getContent())
+                .build());
+
 
         // 2. 封装参数
         ChatCompletionRequest request = new ChatCompletionRequest();
